@@ -19,14 +19,21 @@ def using_HaarCascade(source):
 		ret, frame = cap.read()
 		frame = imutils.resize(frame, width=500)
 		gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-		faces = face_cascade.detectMultiScale(gray, 1.3, 1)
+
+		faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 		end=time.time()
-		for (x,y,w,h) in faces:
-			if (w*h)>min_area and end-start>5:
+		for face in faces:
+			
+			(x,y,w,h)=face.astype(int)
+			if (w*h)>min_area:
 				cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
-				rect_roi=(x, y, w, h)
+				
+	        if end-start>7:
+	        	rect_roi=(x, y, w, h)
 	        	img=frame.copy()
-	        	# flag=1
+	        	flag=1
+	        	break
+
 		cv2.imshow('img',frame)
 		k = cv2.waitKey(100) & 0xff
 		if k == 27:
@@ -133,7 +140,7 @@ if __name__ == "__main__":
 
 		print("Rectangular points selected are: ", points)
 
-	# if HaarCascade was given as input
+	# if HaarCascade was given as algo
 	if(args["algo"]=="H"):
 		print("Using Haar Cascade for detecting professor..")
 		points,img=using_HaarCascade(args["videopath"])
@@ -144,6 +151,13 @@ if __name__ == "__main__":
 		# 	k=cv2.waitKey(100) & 0xff
 		# 	if k==27:
 		# 		break
+	while True:
+		cv2.imshow('selected', img)
+		k=cv2.waitKey(30) & 0xff
+		if k==27:
+			break
 
-	# track_prof.using_correlationDLIB(points,img,args["videopath"])
+	cv2.destroyAllWindows()
+	
+	track_prof.using_correlationDLIB(points,img,args["videopath"])
 	

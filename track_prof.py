@@ -7,6 +7,8 @@ import imutils
 import dlib
 import numpy as np
 
+
+# cons- can't track if object goes out of view
 def using_correlationDLIB(roi,img,source):
     (x,y,w,h)=roi
     tracker = dlib.correlation_tracker()
@@ -31,7 +33,7 @@ def using_correlationDLIB(roi,img,source):
         cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
         cv2.imshow("Image", img)
         # Continue until the user presses ESC key
-        if cv2.waitKey(30) == 27:
+        if cv2.waitKey(1) == 27:
             break
 
     # Relase the VideoCapture object
